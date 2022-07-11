@@ -1,0 +1,237 @@
+
+@font-face {
+    font-family: 'NEXON Lv1 Gothic OTF';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'NEXON Lv1 Gothic OTF';
+    margin: 0;
+    padding: 0; 
+    box-sizing: border-box; 
+    }
+
+
+body {
+    background-color: #E9E9E9;
+}
+#movie_img{
+	float: left;
+	 background-image: url("../img/movieimg.png");
+	 background-size : cover;
+	 margin-top: 6vh;
+	 margin-left: 7vw;
+	 height: 15vh;
+	 width: 20vw;
+}
+
+
+
+#post{
+	float: left;
+	 height: 15vh;
+	 margin-left: 3%;
+	 margin-right: 3%;
+	 margin-top: 3%;
+	 margin-bottom: 1%;
+}
+
+#movie_detailInfo{
+	display:none;
+	float: left;
+	width: 35vw;
+    height: 80vh;
+    margin-left: 4vw;
+    box-shadow: 0px 0px 7px rgb(54, 54, 54);
+    background-image: url("../img/paper2.jpeg");
+     
+}
+
+
+#movie_contents{
+	margin-top: 3%;
+	font-size: 1.4vw;
+	margin-left: 3%;
+	margin-right: 3%;
+	line-height: 1.5em;
+}
+#plot{
+	color: rgb(167, 0, 0);
+	font-weight: 900;
+	font-size: 1.7vw;
+	margin-top: 3%;
+}
+
+ 
+#movie_detail {
+	float: left;
+    width: 40vw;
+    height: 50vmax;
+    margin-top: 4vh;
+    margin-left: 30vw;
+    margin-bottom : 4vh;
+    border-radius: 1.5vmax;
+    box-shadow: 0px 0px 7px rgb(54, 54, 54);
+
+}
+
+table {
+  border-spacing: 2px;
+  border-collapse: separate;
+}
+
+
+#movie_title{
+    font-size: 2.3vw;
+    margin-top: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-weight: 900;
+    color: rgb(167, 0, 0);
+}
+
+#movie_dir {
+    
+   font-size: 1.2vw;
+    float: left;
+    margin-top: 1%;
+    margin-left: 10%;
+    height: 2vh;
+    width: 80%;
+    
+}
+#movie_act {
+    
+   font-size: 1.2vw;
+    float: left;
+    margin-top: 1%;
+    margin-left: 10%;
+    height: 2vh;
+    width: 80%;
+    
+}
+#t_movie {
+    font-size: 1.5vw;
+    margin-top: 15%;
+    margin-left: 10%;
+    margin-right: 10%;
+    
+    
+}
+#miTime{
+	height: 2vh;
+	color: rgb(167, 0, 0);
+	font-weight: 900;
+}
+
+#r_time {
+	margin-top: 2%;
+}
+#miQ {
+	margin-top: 2%;
+}
+
+
+#p_price {
+    
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 3vh;
+    font-size: 1.5vw;
+    font-weight: 900;
+}
+#coupon_text{
+	font-size: 1.2vw;
+	margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-weight: 900;
+}
+
+#coupon {
+    font-size: 1.2vw;
+    margin-top: 2%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 14vh;
+    overflow:scroll;
+    
+}
+
+::-webkit-scrollbar {
+display: none;
+}
+
+table {
+	width: 100%;
+	margin-left:auto; 
+    margin-right:auto;
+    text-align: center;
+}
+
+#point {
+    
+    margin-top: 7%;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 1.3vw;
+}
+
+#user_point{
+	width: 4.5vw;
+	height: 4.5vh;
+	text-align: right;
+	margin-right: 10vw;
+	background: none;
+	border: none;
+	font-size: 1.3vw;
+}
+
+#pointbtn{
+	font-size: 1.2vw;
+	width: 12%;
+	font-size: 1.2vw;
+	border-radius: 0.5;
+}
+
+#result_pay {
+	font-size: 1.2vw;
+    float :  left;
+    margin-top: 7%;
+    margin-left: 60%;
+    margin-right: 2%;
+    height: 5vh;
+}
+
+#r_price{
+	font-size: 1.2vw;
+	margin-top: 2%;
+	margin-left: 7%;
+	font-size: 2vw;
+	color: rgb(167, 0, 0);
+}
+
+
+
+
+#kakaoapibtn {
+	float :  left;
+	margin-top: 6%;
+	 margin-right: 10%;
+    height: 3%;
+    width: 10%;
+    background-size: cover;
+    border-radius: 1vmax;
+    border: none;
+}
+
+
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 1vmax;
+}

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pcwk.miss.movie">
+	
+	<!-- 현재상영중영화 조회 -->
+	<select id="getAllNowPlaying" resultType="NowPlayingVO">
+		SELECT t1.mv_num AS mvNum,
+		    t1.mv_title AS mvTitle,
+		    t1.mv_director AS mvDirector,
+		    t1.mv_actor AS mvActor,
+		    t1.mv_time AS mvTime,
+		    t2.im_route AS imRoute
+		FROM movie t1, image t2
+		WHERE t1.mv_num = t2.mv_num
+		AND t2.mv_seq = 1
+		AND t1.mv_on = 1
+		ORDER BY t1.mv_num
+	</select>
+	
+	<!-- 상영임박영화 조회 -->
+	<select id="getAllPlayingSoon" resultType = "PlayingSoonVO">
+		<![CDATA[
+		SELECT *
+		FROM(
+		SELECT t1.mv_num AS mvNum,
+		    TO_CHAR(t1.mi_time, 'HH24:MI') AS miTime,
+		    t1.mi_quality AS miQuality,
+		    t2.mv_title AS mvTitle,
+		    t3.im_route AS imRoute
+		FROM movie_info t1, movie t2, image t3
+		WHERE t1.mv_num = t2.mv_num
+		AND t2.mv_num = t3.mv_num
+		AND t3.mv_seq = 1
+		AND mi_time > SYSDATE
+		ORDER BY t1.mi_time)
+		WHERE ROWNUM <= 10
+		]]>
+	</select>
+	
+	<!-- 영화상영 movieinfo조회 -->
+	<select id="getWatchMovie" parameterType="WatchMovieVO" resultType="WatchMovieVO">
+		SELECT mv_num AS mvNum,
+			mi_time AS miTime,
+			mi_quality AS miQuality,
+			mi_video AS miVideo
+		FROM movie_info
+		WHERE mv_num = #{mvNum}
+		AND mi_quality = #{miQuality}
+		AND ROWNUM = 1
+	</select>
+	
+	<!-- 영화상세 영화정보 조회 -->
+	<select id="getMovieDetail" parameterType="int" resultType="MovieDetailVO">
+		SELECT A.*,
+		    B.*
+		FROM
+		    (SELECT t1.mv_num AS mvNum,
+		        t1.mv_title AS mvTitle,
+		        t1.mv_director AS mvDirector,
+		        t1.mv_actor AS mvActor,
+		        t1.mv_genre AS mvGenre,
+		        TO_CHAR(t1.mv_released, 'YYYY-MM-DD') AS mvReleased,
+		        t1.mv_agelimit AS mvAgelimit,
+		        t1.mv_summary AS mvSummary,
+		        t1.mv_nation AS mvNation,
+		        t1.mv_time AS mvTime,
+		        t1.mv_on AS mvOn,
+		        t2.im_route AS imRoute
+		    FROM movie t1, image t2
+		    WHERE t1.mv_num = t2.mv_num
+		    AND t2.mv_seq = 1
+		    AND t1.mv_num = #{mvNum})A
+		CROSS JOIN
+		(
+		    SELECT im_route AS imRoute2
+		    FROM IMAGE
+		    WHERE mv_num = #{mvNum}
+		    AND mv_seq = 2
+		)B
+	</select>
+	
+	<!-- 영화상세 스틸컷 조회 -->
+	<select id="getStillCut" parameterType="int" resultType="StillCutVO">
+	    SELECT mv_num AS mvNum,
+		    mv_seq AS mvSeq,
+		    im_route AS imRoute
+		FROM image
+		WHERE mv_seq NOT IN 1
+		AND mv_seq NOT IN 2
+		AND mv_num = #{mvNum}
+	</select>
+	
+	<!-- 리뷰조회 -->
+	<select id="getAllReview" parameterType="int" resultType="MovieReviewVO">
+		SELECT mv_num AS mvNum,
+		    r_num AS rNum,
+		    mb_nickname AS mbNickname,
+		    r_review AS rReview,
+		    r_rating AS rRating
+		FROM review
+		WHERE mv_num = #{mvNum}
+	</select>
+	
+	<!-- 리뷰 등록 -->
+	<insert id="reviewAdd" parameterType="MovieReviewVO">
+		INSERT INTO review(
+		    r_num,
+		    r_rating,
+		    r_review,
+		    mb_nickname,
+		    mv_num
+		) VALUES (
+		    review_num_seq.NEXTVAL,
+		    #{rRating},
+		    #{rReview},
+		    #{mbNickname},
+		    #{mvNum}
+		)
+	</insert>
+	
+	<!-- 리뷰 PAGING -->
+	<select id="reviewRetrieve" parameterType="SearchVO" resultType="MovieReviewVO">
+		<![CDATA[
+		SELECT A.*, B.*
+		FROM 
+		    (SELECT TT1.mv_num AS mvNum,
+		        TT1.r_num AS rNum,
+		        TT1.mb_nickname AS mbNickname,
+		        TT1.r_review AS rReview,
+		        TT1.r_rating AS rRating
+		    FROM(
+		        SELECT ROWNUM AS rno,
+		            T1.*
+		        FROM(
+		            SELECT
+		                mv_num,
+		                r_num,
+		                mb_nickname,
+		                r_review,
+		                r_rating
+		            FROM review
+		            WHERE mv_num = #{mvNum}
+		            ORDER BY r_num DESC
+		        )T1
+		        WHERE ROWNUM <= #{pageSize} * (#{pageNum} - 1) + #{pageSize}
+		    )TT1
+		    WHERE TT1.rno >= (#{pageSize} * (#{pageNum} - 1) + 1)
+		    )A
+		CROSS JOIN
+		(SELECT COUNT(*) AS totalCnt,
+			ROUND((SUM(r_rating) / COUNT(*)), 2) AS num
+		FROM review
+		WHERE mv_num = #{mvNum})B
+		]]>
+	</select>
+	
+	<!-- 영화목록페이지 영화정보 불러오기 -->
+	<select id="getMovieList" parameterType="int" resultType="MovieListVO">
+		SELECT A.*,
+		    B.totalCnt,
+		    B.num
+		FROM(SELECT t1.mv_num AS mvNum,
+		    t1.mv_title AS mvTitle,
+		    t1.mv_director AS mvDirector,
+		    TO_CHAR(t1.mv_released, 'YYYY/MM/DD') AS mvReleased,
+		    t1.mv_on AS mvOn,
+		    t2.im_route AS imRoute
+		FROM movie t1, image t2
+		WHERE t1.mv_num = t2.mv_num
+		AND t2.mv_seq = 1)A
+		LEFT OUTER JOIN
+		(SELECT mv_num AS mvNum,
+		    COUNT(*) AS totalCnt,
+		    ROUND((SUM(R_RATING) / COUNT(*)), 2) AS num
+		FROM review
+		GROUP BY mv_num)B
+		ON A.mvNum = B.mvNum
+		WHERE A.mvOn = #{mvOn}
+	</select>
+</mapper>
